@@ -22,9 +22,9 @@
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{847855a5-0855-49ef-8462-cb2f450a0bfd}</ProjectGuid>
-    <RootNamespace>Sand_Painter</RootNamespace>
+    <RootNamespace>Sand-Painter</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>Sand_Painter</ProjectName>
+    <ProjectName>Sand-Painter</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -135,7 +135,7 @@
     <ClCompile Include="ParticleMatrix.cpp" />
     <ClCompile Include="GameWindow.cpp" />
     <ClCompile Include="Particle.cpp" />
-    <ClCompile Include="Sand_Painter.cpp" />
+    <ClCompile Include="SandPainter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ParticleMatrix.h" />
