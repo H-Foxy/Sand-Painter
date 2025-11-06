@@ -3,7 +3,7 @@
 class GameWindow {
 public:
     // Constructor / Destructor
-    GameWindow(unsigned int windowSize_X, unsigned int windowSize_Y, unsigned int scaleFactor, ParticleMatrix &particleMatrix);
+    GameWindow(unsigned int window_size_x, unsigned int window_size_y, unsigned int scale_factor, ParticleMatrix &particle_matrix);
     ~GameWindow();
 
 	// Main loop
@@ -11,9 +11,9 @@ public:
 
 private:
     // Attributes
-    sf::RenderWindow window;
-    sf::VertexArray gridLines;
-	ParticleMatrix &particleMatrix;
+    sf::RenderWindow m_window;
+    sf::VertexArray m_gridLines;
+	ParticleMatrix &m_particle_matrix;
     // Functions
     void processEvents();
     void render();

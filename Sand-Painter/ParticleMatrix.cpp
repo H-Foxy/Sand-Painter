@@ -1,41 +1,41 @@
 #include "Includes.h"
 
-ParticleMatrix::ParticleMatrix(unsigned int sizeX, unsigned int sizeY, unsigned int scaleFactor)
-	: columns(sizeX / scaleFactor), rows(sizeY / scaleFactor), scaleFactor(scaleFactor), particlesVertices(sf::PrimitiveType::Triangles)
+ParticleMatrix::ParticleMatrix(unsigned int size_x, unsigned int size_y, unsigned int scale_factor)
+	: m_columns(size_x / scale_factor), m_rows(size_y / scale_factor), m_scale_factor(scale_factor), m_particles_vertices(sf::PrimitiveType::Triangles)
 {
 	// Initialise matrix with default Particles (Yellow)
-	Particle defaultParticle(sf::Color::Yellow);
-	matrix.resize(columns, std::vector<Particle>(rows, defaultParticle));
-	std::cout << "Game Matrix Initialized: " << columns << " x " << rows << " cells of size " << scaleFactor << " pixels." << std::endl;
+	Particle default_particle(sf::Color::Yellow);
+	m_matrix.resize(m_columns, std::vector<Particle>(m_rows, default_particle));
+	std::cout << "Game Matrix Initialized: " << m_columns << " x " << m_rows << " cells of size " << scale_factor << " pixels." << std::endl;
 
     // Convert coordinates to triangle Vertices for rendering
 	// Loop through each cell in the matrix
-    for (unsigned int x = 0; x < columns; ++x)
+    for (unsigned int x = 0; x < m_columns; ++x)
     {
-        for (unsigned int y = 0; y < rows; ++y)
+        for (unsigned int y = 0; y < m_rows; ++y)
         {
 			// Get color of the current cell
-            sf::Color color = matrix[x][y].colour;
+            sf::Color color = m_matrix[x][y].m_colour;
 
 			// Calculate pixel positions
-            float px = x * scaleFactor;
-            float py = y * scaleFactor;
+            float px = x * m_scale_factor;
+            float py = y * m_scale_factor;
 
             // Calculate positions of the 4 cell corners
-            sf::Vector2f topLeft(px, py);
-            sf::Vector2f topRight(px + scaleFactor, py);
-            sf::Vector2f bottomRight(px + scaleFactor, py + scaleFactor);
-            sf::Vector2f bottomLeft(px, py + scaleFactor);
+            sf::Vector2f top_left(px, py);
+            sf::Vector2f top_right(px + m_scale_factor, py);
+            sf::Vector2f bottom_right(px + m_scale_factor, py + m_scale_factor);
+            sf::Vector2f bottom_left(px, py + m_scale_factor);
 
             // First triangle (top-left, top-right, bottom-right)
-            particlesVertices.append({ topLeft, color });
-            particlesVertices.append({ topRight, color });
-            particlesVertices.append({ bottomRight, color });
+            m_particles_vertices.append({ top_left, color });
+            m_particles_vertices.append({ top_right, color });
+            m_particles_vertices.append({ bottom_right, color });
 
             // Second triangle (bottom-right, bottom-left, top-left)
-            particlesVertices.append({ bottomRight, color });
-            particlesVertices.append({ bottomLeft, color });
-            particlesVertices.append({ topLeft, color });
+            m_particles_vertices.append({ bottom_right, color });
+            m_particles_vertices.append({ bottom_left, color });
+            m_particles_vertices.append({ top_left, color });
         }
     }
 }
@@ -44,21 +44,21 @@ ParticleMatrix::ParticleMatrix(unsigned int sizeX, unsigned int sizeY, unsigned 
 ParticleMatrix::~ParticleMatrix() 
 {}
 
-void ParticleMatrix::setCell(int x, int y, sf::Color colour) 
+void ParticleMatrix::setCell(int pos_x, int pos_y, sf::Color colour)
 {
 	// Bounds checking
-	if (x < 0 || x >= columns || y < 0 || y >= rows) {
-		std::cerr << "Error: setCell(" << x << ", " << y << ") is out of bounds." << std::endl;
+	if (pos_x < 0 || pos_x >= m_columns || pos_y < 0 || pos_y >= m_rows) {
+		std::cerr << "Error: setCell(" << pos_x << ", " << pos_y << ") is out of bounds." << std::endl;
 		return;
 	}
 
-	// Calculate starting index for the cell's vertices
-    int i = (y + (x * rows)) * 6;
+    // Calculate starting index for the cell's vertices
+    int i = (pos_y + (pos_x * m_rows)) * 6;
 
     // Update color of all 6 vertices
     for (int v = 0; v < 6; ++v) {
-        particlesVertices[v + i].color = colour;
+        m_particles_vertices[v + i].color = colour;
     }
-	// Update particle colour in matrix
-	matrix[x][y].colour = colour;
+    // Update particle in matrix
+    m_matrix[pos_x][pos_y].m_colour = colour;
 }

@@ -2,13 +2,13 @@
 
 // Constructor
 Particle::Particle(sf::Color colour, sf::Vector2f velocity)
-    : colour(colour), velocity(velocity)
+    : m_colour(colour), m_velocity(velocity)
 {
 	std::cout << "Particle Created - Colour: " << colour.toInteger() << ", Velocity: (" << velocity.x << ", " << velocity.y << ")" << std::endl;
 }
 // Constructor
 Particle::Particle(sf::Color colour)
-	: colour(colour), velocity({0,0}) 
+	: m_colour(colour), m_velocity({0,0}) 
 {}
 // Destructor
 Particle::~Particle() 

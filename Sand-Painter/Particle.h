@@ -3,8 +3,8 @@
 class Particle {
 public:
 	// Attributes
-	sf::Color colour;
-	sf::Vector2f velocity;
+	sf::Color m_colour;
+	sf::Vector2f m_velocity;
 
 	// Constructors / Destructor
 	Particle(sf::Color colour, sf::Vector2f velocity);

@@ -3,17 +3,17 @@
 int main()
 {
 	// Particle matrix parameters
-	const unsigned int matrix_X = 1920;
-	const unsigned int matrix_Y = 1080;
-	const unsigned int scaleFactor = 10;
+	const unsigned int matrix_x = 1920;
+	const unsigned int matrix_y = 1080;
+	const unsigned int scale_factor = 10;
 	// Game window parameters
-	const unsigned int windowSize_X = 1920;
-	const unsigned int windowSize_Y = 1080;
+	const unsigned int window_size_x = 1920;
+	const unsigned int window_size_y = 1080;
 
 	// Load Game Matrix
-	ParticleMatrix particleMatrix(matrix_X, matrix_Y, scaleFactor);
+	ParticleMatrix particleMatrix(matrix_x, matrix_y, scale_factor);
 	// Load Game Window
-	GameWindow game(windowSize_X, windowSize_Y, scaleFactor, particleMatrix);
+	GameWindow game(window_size_x, window_size_y, scale_factor, particleMatrix);
 	// Start Game Loop
 	game.run();
 }
