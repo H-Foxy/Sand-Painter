@@ -1,14 +1,12 @@
 #include "Includes.h"
 
-// Constructor
-Particle::Particle(sf::Color colour, sf::Vector2f velocity)
-    : m_colour(colour), m_velocity(velocity)
-{
-	std::cout << "Particle Created - Colour: " << colour.toInteger() << ", Velocity: (" << velocity.x << ", " << velocity.y << ")" << std::endl;
-}
-// Constructor
+// Default Constructor
+Particle::Particle()
+	: m_colour(sf::Color::White), m_velocity({ 0,0 }), m_is_empty(true)
+{}
+// Coloured Constructor
 Particle::Particle(sf::Color colour)
-	: m_colour(colour), m_velocity({0,0}) 
+	: m_colour(colour), m_velocity({0,0}), m_is_empty(false)
 {}
 // Destructor
 Particle::~Particle() 

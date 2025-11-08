@@ -53,11 +53,12 @@ void GameWindow::processEvents()
         int cell_x = mouse_pos.x / m_particle_matrix.m_scale_factor;
         int cell_y = mouse_pos.y / m_particle_matrix.m_scale_factor;
 
-		// Check boundaries, place particle
+		// Check boundaries, set particle
         if (cell_x >= 0 && cell_x < m_particle_matrix.m_columns &&
             cell_y >= 0 && cell_y < m_particle_matrix.m_rows)
         {
-            m_particle_matrix.setCell(cell_x, cell_y, sf::Color::Red);
+			// set red particle
+            m_particle_matrix.setCellParticle(cell_x, cell_y, Particle(sf::Color::Red));
         }
 
         std::cout << "Left mouse button clicked at: " << vec2ToString(mouse_pos) << std::endl;
@@ -71,11 +72,12 @@ void GameWindow::processEvents()
         int cell_x = mouse_pos.x / m_particle_matrix.m_scale_factor;
         int cell_y = mouse_pos.y / m_particle_matrix.m_scale_factor;
 
-        // Check boundaries, place particle
+        // Check boundaries, set particle
         if (cell_x >= 0 && cell_x < m_particle_matrix.m_columns &&
             cell_y >= 0 && cell_y < m_particle_matrix.m_rows)
         {
-            m_particle_matrix.setCell(cell_x, cell_y, sf::Color::Yellow);
+            // Set empty particle
+            m_particle_matrix.setCellParticle(cell_x, cell_y, Particle());
         }
 
         std::cout << "Right mouse button clicked at: " << vec2ToString(mouse_pos) << std::endl;
@@ -108,12 +110,12 @@ void GameWindow::processPhysics()
     for (int y = m_particle_matrix.m_rows -1; y >= 0; --y)
     {
         for (unsigned int x = 0; x < m_particle_matrix.m_columns; ++x)
-        {
+        { 
             // Get particle
             Particle &particle = m_particle_matrix.m_matrix[x][y];
 
-            // Apply gravity
-            if (m_particle_matrix.m_matrix[x][y].m_colour != sf::Color::Yellow) {
+            // Apply gravity if not empty particle
+            if (!m_particle_matrix.m_matrix[x][y].m_is_empty) {
                 particle.m_velocity.y += 0.33f;           // gravity
                 if (particle.m_velocity.y > 3.0f)
                     particle.m_velocity.y = 3.0f;         // terminal velocity
@@ -123,10 +125,11 @@ void GameWindow::processPhysics()
             int fall_distance = static_cast<int>(std::round(particle.m_velocity.y));
             int new_y = y;
 
-            // Fall until hitting a non-yellow particle or matrix bottom row
+            // Fall until hitting a non empty particle or matrix bottom row
             for (int i = 1; i <= fall_distance; ++i) {
                 int target_y = y + i;
-                if (target_y >= m_particle_matrix.m_rows || m_particle_matrix.m_matrix[x][target_y].m_colour != sf::Color::Yellow) {
+                if (target_y >= m_particle_matrix.m_rows || !m_particle_matrix.m_matrix[x][target_y].m_is_empty) {
+					particle.m_velocity.y = 0.0f;         // reset velocity
                     break; // Stop incrementing newY
                 }
                 else {
@@ -136,9 +139,9 @@ void GameWindow::processPhysics()
 
 			// Swap particle to new position if y has changed
             if (new_y != y) {
-                std::swap(m_particle_matrix.m_matrix[x][y], m_particle_matrix.m_matrix[x][new_y]);
-                m_particle_matrix.setCell(x, y, sf::Color::Yellow); // Set old position to air particle
-                m_particle_matrix.setCell(x, new_y, sf::Color::Red); // Set new position to red particle
+				// Update particles
+				m_particle_matrix.setCellParticle(x, new_y, particle); // set new position to hold referenced particle
+				m_particle_matrix.setCellParticle(x, y, Particle()); // set old position to empty particle
             }
         }
     }

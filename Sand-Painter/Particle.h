@@ -5,9 +5,10 @@ public:
 	// Attributes
 	sf::Color m_colour;
 	sf::Vector2f m_velocity;
+	bool m_is_empty;
 
 	// Constructors / Destructor
-	Particle(sf::Color colour, sf::Vector2f velocity);
+	Particle();
 	Particle(sf::Color colour);
 	~Particle();
 };

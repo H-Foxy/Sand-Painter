@@ -3,9 +3,8 @@
 ParticleMatrix::ParticleMatrix(unsigned int size_x, unsigned int size_y, unsigned int scale_factor)
 	: m_columns(size_x / scale_factor), m_rows(size_y / scale_factor), m_scale_factor(scale_factor), m_particles_vertices(sf::PrimitiveType::Triangles)
 {
-	// Initialise matrix with default Particles (Yellow)
-	Particle default_particle(sf::Color::Yellow);
-	m_matrix.resize(m_columns, std::vector<Particle>(m_rows, default_particle));
+	// Initialise matrix with empty Particles (White)
+	m_matrix.resize(m_columns, std::vector<Particle>(m_rows, Particle()));
 	std::cout << "Game Matrix Initialized: " << m_columns << " x " << m_rows << " cells of size " << scale_factor << " pixels." << std::endl;
 
     // Convert coordinates to triangle Vertices for rendering
@@ -44,14 +43,8 @@ ParticleMatrix::ParticleMatrix(unsigned int size_x, unsigned int size_y, unsigne
 ParticleMatrix::~ParticleMatrix() 
 {}
 
-void ParticleMatrix::setCell(int pos_x, int pos_y, sf::Color colour)
+void ParticleMatrix::setCellVertexColours(int pos_x, int pos_y, sf::Color colour)
 {
-	// Bounds checking
-	if (pos_x < 0 || pos_x >= m_columns || pos_y < 0 || pos_y >= m_rows) {
-		std::cerr << "Error: setCell(" << pos_x << ", " << pos_y << ") is out of bounds." << std::endl;
-		return;
-	}
-
     // Calculate starting index for the cell's vertices
     int i = (pos_y + (pos_x * m_rows)) * 6;
 
@@ -59,6 +52,19 @@ void ParticleMatrix::setCell(int pos_x, int pos_y, sf::Color colour)
     for (int v = 0; v < 6; ++v) {
         m_particles_vertices[v + i].color = colour;
     }
+}
+
+void ParticleMatrix::setCellParticle(int pos_x, int pos_y, Particle particle)
+{
+    // Bounds checking
+    if (pos_x < 0 || pos_x >= m_columns || pos_y < 0 || pos_y >= m_rows) {
+        std::cerr << "Error: setCell(" << pos_x << ", " << pos_y << ") is out of bounds." << std::endl;
+        return;
+    }
+
     // Update particle in matrix
-    m_matrix[pos_x][pos_y].m_colour = colour;
+    m_matrix[pos_x][pos_y] = particle;
+
+    // Update vertex colors
+    setCellVertexColours(pos_x, pos_y, particle.m_colour);
 }
