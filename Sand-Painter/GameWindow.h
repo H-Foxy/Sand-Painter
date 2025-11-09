@@ -14,8 +14,12 @@ private:
     sf::RenderWindow m_window;
     sf::VertexArray m_gridLines;
 	ParticleMatrix &m_particle_matrix;
+    sf::Vector2i m_last_left_click_pos;
+	sf::Vector2i m_last_right_click_pos;
+	int m_inactivity_tick_count;
     // Functions
-    void processEvents();
     void render();
+    void processEvents();
 	void processPhysics();
+	void drawMouseMovement(sf::Vector2i start, sf::Vector2i end, Particle particle);
 };

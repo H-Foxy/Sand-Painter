@@ -1,10 +1,6 @@
 #include "Includes.h"
 
 class ParticleMatrix {
-private:
-	// Functions
-	void setCellVertexColours(int x, int y, sf::Color colour);
-
 public:
 	// Attributes
 	unsigned int m_rows;
@@ -18,4 +14,8 @@ public:
 	~ParticleMatrix();
 
 	void setCellParticle(int x, int y, Particle particle);
+
+private:
+	// Functions
+	void setCellVertexColours(int x, int y, sf::Color colour);
 };

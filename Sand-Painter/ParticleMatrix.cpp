@@ -62,9 +62,12 @@ void ParticleMatrix::setCellParticle(int pos_x, int pos_y, Particle particle)
         return;
     }
 
-    // Update particle in matrix
-    m_matrix[pos_x][pos_y] = particle;
+	// Update particle in matrix if not already the same
+    if (m_matrix[pos_x][pos_y].m_is_empty != particle.m_is_empty)
+    {
+        m_matrix[pos_x][pos_y] = particle;
 
-    // Update vertex colors
-    setCellVertexColours(pos_x, pos_y, particle.m_colour);
+        // Update vertex colors
+        setCellVertexColours(pos_x, pos_y, particle.m_colour);
+	}
 }
