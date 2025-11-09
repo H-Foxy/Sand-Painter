@@ -2,6 +2,9 @@
 
 class GameWindow {
 public:
+
+    sf::RenderWindow m_window;
+
     // Constructor / Destructor
     GameWindow(unsigned int window_size_x, unsigned int window_size_y, unsigned int scale_factor, ParticleMatrix &particle_matrix);
     ~GameWindow();
@@ -11,7 +14,6 @@ public:
 
 private:
     // Attributes
-    sf::RenderWindow m_window;
     sf::VertexArray m_gridLines;
 	ParticleMatrix &m_particle_matrix;
     sf::Vector2i m_last_left_click_pos;

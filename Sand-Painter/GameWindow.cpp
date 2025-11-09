@@ -38,9 +38,9 @@ void GameWindow::run()
 {
     while (m_window.isOpen()) 
     {
+        render();
         processEvents();
-		render();
-        processPhysics();
+        m_particle_matrix.processPhysics();
     }
 }
 
@@ -150,12 +150,7 @@ void GameWindow:: drawMouseMovement(sf::Vector2i start, sf::Vector2i end, Partic
 
     while (true)
     {
-        // Check boundaries, set particle
-        if (x0 >= 0 && x0 < m_particle_matrix.m_columns &&
-            y0 >= 0 && y0 < m_particle_matrix.m_rows)
-        {
-            m_particle_matrix.setCellParticle(x0, y0, particle);
-        }
+        m_particle_matrix.setCellParticle(x0, y0, particle);
 
         // Stop when end point reached
         if (x0 == x1 && y0 == y1)
@@ -171,50 +166,6 @@ void GameWindow:: drawMouseMovement(sf::Vector2i start, sf::Vector2i end, Partic
         {
             err += dx;
             y0 += sy;
-        }
-    }
-}
-
-// Gravity and collisions particle physics
-void GameWindow::processPhysics() 
-{
-	// Loop matrix - bottom to top
-    for (int y = m_particle_matrix.m_rows -1; y >= 0; --y)
-    {
-        for (unsigned int x = 0; x < m_particle_matrix.m_columns; ++x)
-        { 
-            // Get particle
-            Particle &particle = m_particle_matrix.m_matrix[x][y];
-
-            // Apply gravity if not empty particle
-            if (!m_particle_matrix.m_matrix[x][y].m_is_empty) {
-                particle.m_velocity.y += 0.33f;           // gravity
-                if (particle.m_velocity.y > 3.0f)
-                    particle.m_velocity.y = 3.0f;         // terminal velocity
-            }
-
-			// Calculate fall distance
-            int fall_distance = static_cast<int>(std::round(particle.m_velocity.y));
-            int new_y = y;
-
-            // Fall until hitting a non empty particle or matrix bottom row
-            for (int i = 1; i <= fall_distance; ++i) {
-                int target_y = y + i;
-                if (target_y >= m_particle_matrix.m_rows || !m_particle_matrix.m_matrix[x][target_y].m_is_empty) {
-					particle.m_velocity.y = 0.0f;         // reset velocity
-                    break; // Stop incrementing newY
-                }
-                else {
-                    new_y = target_y;
-                }
-            }
-
-			// Swap particle to new position if y has changed
-            if (new_y != y) {
-				// Update particles
-				m_particle_matrix.setCellParticle(x, new_y, particle); // set new position to hold referenced particle
-				m_particle_matrix.setCellParticle(x, y, Particle()); // set old position to empty particle
-            }
         }
     }
 }

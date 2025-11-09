@@ -14,6 +14,7 @@ public:
 	~ParticleMatrix();
 
 	void setCellParticle(int x, int y, Particle particle);
+	void processPhysics();
 
 private:
 	// Functions
