@@ -6,7 +6,7 @@ public:
     sf::RenderWindow m_window;
 
     // Constructor / Destructor
-    GameWindow(unsigned int window_size_x, unsigned int window_size_y, unsigned int scale_factor, ParticleMatrix &particle_matrix);
+    GameWindow(unsigned int window_size_x, unsigned int window_size_y, unsigned int scale_factor, ParticleMatrix &particle_matrix, Brush &brush);
     ~GameWindow();
 
 	// Main loop
@@ -16,6 +16,7 @@ private:
     // Attributes
     sf::VertexArray m_gridLines;
 	ParticleMatrix &m_particle_matrix;
+    Brush &m_brush;
     sf::Vector2i m_last_left_click_pos;
 	sf::Vector2i m_last_right_click_pos;
 	int m_inactivity_tick_count;

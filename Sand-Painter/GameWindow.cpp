@@ -5,8 +5,8 @@ std::string vec2ToString(const sf::Vector2i vec2)
     return '(' + std::to_string(vec2.x) + ", " + std::to_string(vec2.y) + ')';
 }
 
-GameWindow::GameWindow(unsigned int window_size_x, unsigned int window_size_y, unsigned int scale_factor, ParticleMatrix &particle_matrix)
-	: m_window(sf::VideoMode({ window_size_x, window_size_y }), std::string("Sand Painter")), m_particle_matrix(particle_matrix), 
+GameWindow::GameWindow(unsigned int window_size_x, unsigned int window_size_y, unsigned int scale_factor, ParticleMatrix &particle_matrix, Brush &brush)
+	: m_window(sf::VideoMode({ window_size_x, window_size_y }), std::string("Sand Painter")), m_particle_matrix(particle_matrix), m_brush(brush),
 	m_gridLines(sf::PrimitiveType::Lines), m_last_left_click_pos({ -1, -1 }), m_inactivity_tick_count(2), m_last_right_click_pos({ -1, -1 })
 {
 	// Set frame rate limit
@@ -16,14 +16,14 @@ GameWindow::GameWindow(unsigned int window_size_x, unsigned int window_size_y, u
 	// Y axis lines
     for (int x = 0; x <= window_size_x; x += scale_factor)
     {
-        m_gridLines.append(sf::Vertex(sf::Vector2f(x, 0), sf::Color(100, 100, 100)));
-        m_gridLines.append(sf::Vertex(sf::Vector2f(x, window_size_y), sf::Color(100, 100, 100)));
+        m_gridLines.append(sf::Vertex(sf::Vector2f(x, 0), sf::Color::Black));
+        m_gridLines.append(sf::Vertex(sf::Vector2f(x, window_size_y), sf::Color::Black));
     }
 	// X axis lines
     for (int y = 0; y <= window_size_y; y += scale_factor)
     {
-        m_gridLines.append(sf::Vertex(sf::Vector2f(0, y), sf::Color(100, 100, 100)));
-        m_gridLines.append(sf::Vertex(sf::Vector2f(window_size_x, y), sf::Color(100, 100, 100)));
+        m_gridLines.append(sf::Vertex(sf::Vector2f(0, y), sf::Color::Black));
+        m_gridLines.append(sf::Vertex(sf::Vector2f(window_size_x, y), sf::Color::Black));
 	}
 }
 
@@ -49,67 +49,58 @@ void GameWindow::render()
 {
     m_window.clear();
     m_window.draw(m_particle_matrix.m_particles_vertices);
-    m_window.draw(m_gridLines);
+    //m_window.draw(m_gridLines);
+    m_window.draw(m_brush.m_circle);
     m_window.display();
 }
 
 void GameWindow::processEvents() 
 {
+	// Get mouse position
+    sf::Vector2i mouse_pos = sf::Mouse::getPosition(m_window);
+	m_brush.moveBrush(mouse_pos);
+
 	// Left mouse button click
     if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
     {
-		// Get mouse position, scale to cell coordinates
-        sf::Vector2i mouse_pos = sf::Mouse::getPosition(m_window);
-        int cell_x = mouse_pos.x / m_particle_matrix.m_scale_factor;
-        int cell_y = mouse_pos.y / m_particle_matrix.m_scale_factor;
-
-        // Check boundaries, set particle
-        if (cell_x >= 0 && cell_x < m_particle_matrix.m_columns &&
-            cell_y >= 0 && cell_y < m_particle_matrix.m_rows)
+        // Check if mouse is dragged whilst clicked
+        if (m_last_left_click_pos.x != -1 && m_last_left_click_pos.y != -1)
         {
-            if (m_last_left_click_pos.x != -1 && m_last_left_click_pos.y != -1)
-            {
-                // Track mouse movement between last and current position
-                drawMouseMovement(m_last_left_click_pos, sf::Vector2i(cell_x, cell_y), sf::Color::Red);
-            }
-            else
-            {
-                // Set red particle
-                m_particle_matrix.setCellParticle(cell_x, cell_y, Particle(sf::Color::Red));    
-            }
-			// Update inactivity tick count and last left click position
-            m_inactivity_tick_count = 2;
-			m_last_left_click_pos = { cell_x,cell_y };
-		}
+            // Track mouse movement between last and current position
+            drawMouseMovement(m_last_left_click_pos, mouse_pos, sf::Color::Red);
+        }
+        else
+        {
+            // Set red particle
+            m_brush.brushParticles(m_particle_matrix, Particle(sf::Color::Red)); 
+        }
+        // Update inactivity tick count and last left click position
+        m_inactivity_tick_count = 2;
+        m_last_left_click_pos = mouse_pos;
+
+		// Debug output
         std::cout << "Left mouse button clicked at: " << vec2ToString(mouse_pos) << std::endl;
     }
 
     // Right mouse button click
     if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Right))
     {
-        // Get mouse position, scale to cell coordinates
-        sf::Vector2i mouse_pos = sf::Mouse::getPosition(m_window);
-        int cell_x = mouse_pos.x / m_particle_matrix.m_scale_factor;
-        int cell_y = mouse_pos.y / m_particle_matrix.m_scale_factor;
-
-        // Check boundaries, set particle
-        if (cell_x >= 0 && cell_x < m_particle_matrix.m_columns &&
-            cell_y >= 0 && cell_y < m_particle_matrix.m_rows)
+        // Check if mouse is dragged whilst clicked
+        if (m_last_right_click_pos.x != -1 && m_last_right_click_pos.y != -1)
         {
-            if (m_last_right_click_pos.x != -1 && m_last_right_click_pos.y != -1)
-            {
-                // Track mouse movement between last and current position
-                drawMouseMovement(m_last_right_click_pos, sf::Vector2i(cell_x, cell_y), Particle());
-            }
-            else
-            {
-                // Set empty particle
-                m_particle_matrix.setCellParticle(cell_x, cell_y, Particle());
-            }
-            // Update inactivity tick count and last right click position
-            m_inactivity_tick_count = 2;
-            m_last_right_click_pos = { cell_x,cell_y };
+            // Track mouse movement between last and current position
+            drawMouseMovement(m_last_right_click_pos, mouse_pos, Particle());
         }
+        else
+        {
+            // Set empty particle
+            m_brush.brushParticles(m_particle_matrix, Particle());
+        }
+        // Update inactivity tick count and last right click position
+        m_inactivity_tick_count = 2;
+        m_last_right_click_pos = mouse_pos;
+        
+		// Debug output
         std::cout << "Right mouse button clicked at: " << vec2ToString(mouse_pos) << std::endl;
     }
 
@@ -133,10 +124,9 @@ void GameWindow::processEvents()
     }
 }
 
-// Bresenham's line algorithm for drawing particles
+// Bresenham's line algorithm for drawing straight lines between two mouse points
 void GameWindow:: drawMouseMovement(sf::Vector2i start, sf::Vector2i end, Particle particle)
 {
-
     int x0 = start.x;
     int y0 = start.y;
     int x1 = end.x;
@@ -150,7 +140,9 @@ void GameWindow:: drawMouseMovement(sf::Vector2i start, sf::Vector2i end, Partic
 
     while (true)
     {
-        m_particle_matrix.setCellParticle(x0, y0, particle);
+		// Move Brush and fill in particles
+		m_brush.moveBrush(sf::Vector2i(x0, y0));
+        m_brush.brushParticles(m_particle_matrix, particle);
 
         // Stop when end point reached
         if (x0 == x1 && y0 == y1)

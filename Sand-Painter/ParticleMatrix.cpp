@@ -16,7 +16,7 @@ ParticleMatrix::ParticleMatrix(unsigned int size_x, unsigned int size_y, unsigne
 			// Get color of the current cell
             sf::Color color = m_matrix[x][y].m_colour;
 
-			// Calculate pixel positions
+			// Calculate scaled pixel positions
             float px = x * m_scale_factor;
             float py = y * m_scale_factor;
 
@@ -78,6 +78,7 @@ void ParticleMatrix::processPhysics()
     // Loop matrix - bottom to top
     for (int y = m_rows - 1; y >= 0; --y)
     {
+        // Left to right
         for (unsigned int x = 0; x < m_columns; ++x)
         {
             // Get particle
@@ -103,26 +104,41 @@ void ParticleMatrix::processPhysics()
                     particle.m_velocity.y = 0.0f; // reset velocity
                     break; // Stop incrementing newY
                 }
-                // If colliding with a non empty particle
-                if (!m_matrix[x][target_y].m_is_empty) 
+                // Collision with non-empty particle
+                if (!m_matrix[x][target_y].m_is_empty)
                 {
-					// Try to move diagonally left or right
-                      
-					// Check left diagonal
-                    if (x > 0 && m_matrix[x - 1][target_y].m_is_empty) {
-                        // Swap particle to left diagonal position
-                        setCellParticle(x - 1, target_y, particle);
-                        setCellParticle(x, y, Particle());
+                    // Check left diagonal move is free
+                    bool can_move_left = (x > 0) &&
+                        m_matrix[x - 1][target_y].m_is_empty &&
+                        m_matrix[x - 1][y].m_is_empty;
+                    // Check right diagonal move is free
+                    bool can_move_right = (x < m_columns - 1) &&
+                        m_matrix[x + 1][target_y].m_is_empty &&
+                        m_matrix[x + 1][y].m_is_empty;
+
+                    int dx = 0;
+
+					// Randomly choose left or right if both free
+                    if (can_move_left && can_move_right) {
+                        dx = (rand() % 2 == 0) ? -1 : 1;
                     }
-                    // Check right diagonal
-                    else if (x < m_columns - 1 && m_matrix[x + 1][target_y].m_is_empty) {
-                        // Swap particle to right diagonal position
-                        setCellParticle(x + 1, target_y, particle);
+                    // Move Left
+                    else if (can_move_left) {
+                        dx = -1;
+                    }
+					// Move Right
+                    else if (can_move_right) {
+                        dx = 1;
+                    }
+
+                    if (dx != 0) {
+                        // Move particle dx direction
+                        setCellParticle(x + dx, target_y, particle);
                         setCellParticle(x, y, Particle());
                     }
                     else {
-                        particle.m_velocity.y = 0.0f; // reset velocity
-                        break; // Stop incrementing newY
+                        // No free diagonal space stop falling
+                        particle.m_velocity.y = 0.0f;
                     }
                 }
                 else {

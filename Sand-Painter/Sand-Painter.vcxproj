@@ -132,12 +132,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Brush.cpp" />
     <ClCompile Include="ParticleMatrix.cpp" />
     <ClCompile Include="GameWindow.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="SandPainter.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Brush.h" />
     <ClInclude Include="ParticleMatrix.h" />
     <ClInclude Include="GameWindow.h" />
     <ClInclude Include="Includes.h" />

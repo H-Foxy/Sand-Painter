@@ -12,8 +12,10 @@ int main()
 
 	// Load Game Matrix
 	ParticleMatrix particleMatrix(matrix_x, matrix_y, scale_factor);
+	// Load Brush
+	Brush brush(50, 10, sf::Vector2i{100,100});
 	// Load Game Window
-	GameWindow game(window_size_x, window_size_y, scale_factor, particleMatrix);
+	GameWindow game(window_size_x, window_size_y, scale_factor, particleMatrix, brush);
 	// Start Game Loop
 	game.run();
 }

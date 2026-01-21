@@ -13,4 +13,5 @@
 // Header Files
 #include "Particle.h"
 #include "ParticleMatrix.h"
+#include "Brush.h"
 #include "GameWindow.h"
