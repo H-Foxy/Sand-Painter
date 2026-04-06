@@ -1,6 +1,11 @@
-#include "Includes.h"
+#pragma once
+#include <iostream>
+#include "Particle.h"
+#include <SFML/Graphics.hpp>
+#include <vector>
 
-class ParticleMatrix {
+class ParticleMatrix 
+{
 public:
 	// Attributes
 	unsigned int m_rows;

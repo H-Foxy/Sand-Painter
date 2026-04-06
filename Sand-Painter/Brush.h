@@ -1,7 +1,10 @@
-#include "Includes.h"
+#pragma once
+#include "Particle.h"
+#include "ParticleMatrix.h"
+#include <SFML/Graphics.hpp>
 
-class Brush {
-
+class Brush 
+{
 public:
 	// Attributes
 	int m_radius;
@@ -19,5 +22,4 @@ public:
 	void moveBrush(sf::Vector2i new_centre);
 	void brushParticles(ParticleMatrix& particle_matrix, Particle particle);
 	void calculateOccupiedCoordinates();
-
 };

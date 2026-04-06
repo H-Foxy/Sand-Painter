@@ -1,6 +1,12 @@
-#include "Includes.h"
+#pragma once
+#include "Brush.h"
+#include "Particle.h"
+#include "ParticleMatrix.h"
+#include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 
-class GameWindow {
+class GameWindow 
+{
 public:
 
     sf::RenderWindow m_window;

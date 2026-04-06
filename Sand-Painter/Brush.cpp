@@ -1,9 +1,10 @@
-#include "Includes.h"
+#include "Brush.h"
 
 Brush::Brush(int radius, int scale_factor , sf::Vector2i centre)
-	: m_radius(radius), m_radius_scaled(radius / scale_factor), m_centre(centre), m_centre_scaled(centre / scale_factor), m_scale_factor(scale_factor), m_circle(radius) {
+	: m_radius(radius), m_radius_scaled(radius / scale_factor), m_centre(centre), m_centre_scaled(centre / scale_factor), m_scale_factor(scale_factor), m_circle(radius) 
+{
 	m_circle.setFillColor(sf::Color::Transparent);
-	m_circle.setOutlineThickness(1.f);     // outline width
+	m_circle.setOutlineThickness(1.f);
 	m_circle.setOutlineColor(sf::Color::Black);
 	calculateOccupiedCoordinates();
 };
@@ -31,7 +32,6 @@ void Brush::calculateOccupiedCoordinates()
 	for (int y = -m_radius_scaled; y <= m_radius_scaled; ++y)
 	{
 		int yy = y * y;
-		// max x for this y
 		int xMax = static_cast<int>(std::sqrt(r2 - yy));
 		for (int x = -xMax; x <= xMax; ++x)
 		{

@@ -1,4 +1,4 @@
-#include "Includes.h"
+#include "ParticleMatrix.h"
 
 ParticleMatrix::ParticleMatrix(unsigned int size_x, unsigned int size_y, unsigned int scale_factor)
 	: m_columns(size_x / scale_factor), m_rows(size_y / scale_factor), m_scale_factor(scale_factor), m_particles_vertices(sf::PrimitiveType::Triangles)

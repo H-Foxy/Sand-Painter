@@ -1,6 +1,8 @@
-#include "Includes.h"
+#pragma once
+#include <SFML/Graphics.hpp>
 
-class Particle {
+class Particle 
+{
 public:
 	// Attributes
 	sf::Color m_colour;
