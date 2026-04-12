@@ -67,6 +67,16 @@
       <AdditionalDependencies>sfml-graphics.lib;sfml-window.lib;sfml-system.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <SFMLDll Include="$(ProjectDir)..\external\SFML\build\bin\$(Configuration)\sfml-graphics-d-3.dll" />
+    <SFMLDll Include="$(ProjectDir)..\external\SFML\build\bin\$(Configuration)\sfml-window-d-3.dll" />
+    <SFMLDll Include="$(ProjectDir)..\external\SFML\build\bin\$(Configuration)\sfml-system-d-3.dll" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <SFMLDll Include="$(ProjectDir)..\external\SFML\build\bin\$(Configuration)\sfml-graphics-3.dll" />
+    <SFMLDll Include="$(ProjectDir)..\external\SFML\build\bin\$(Configuration)\sfml-window-3.dll" />
+    <SFMLDll Include="$(ProjectDir)..\external\SFML\build\bin\$(Configuration)\sfml-system-3.dll" />
+  </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Brush.cpp" />
     <ClCompile Include="ParticleMatrix.cpp" />
@@ -82,4 +92,10 @@
     <ClInclude Include="Particle.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <Target Name="CopySFMLDlls" AfterTargets="Build">
+    <Copy 
+      SourceFiles="@(SFMLDll)" 
+      DestinationFolder="$(OutDir)" 
+      SkipUnchangedFiles="true" />
+  </Target>
 </Project>

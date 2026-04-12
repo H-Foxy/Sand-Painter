@@ -14,11 +14,11 @@ This is neccessary to create the dynamic libraries used by __Sand_Painter__ proj
 
 From inside `external` directory run:
 
-- `cmake -S SFML -B SFML/build`  
-  Sets up the CMake build environment.
+- `cmake -S SFML -B SFML/build -DBUILD_SHARED_LIBS=TRUE`  
+  Configure the CMake project to build SFML as dynamic libraries.
 
 - `cmake --build SFML/build --config Release` (or `Debug`)  
-  Builds the SFML libraries.
+  Build SFML in the selected configuration.
 
 ### 2. Build Sand-Painter project
 
