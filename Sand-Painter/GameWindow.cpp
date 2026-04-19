@@ -1,13 +1,9 @@
 #include "GameWindow.h"
 
-std::string vec2ToString(const sf::Vector2i vec2)
-{
-    return '(' + std::to_string(vec2.x) + ", " + std::to_string(vec2.y) + ')';
-}
-
-GameWindow::GameWindow(unsigned int window_size_x, unsigned int window_size_y, unsigned int scale_factor, ParticleMatrix &particle_matrix, Brush &brush)
+GameWindow::GameWindow(unsigned int window_size_x, unsigned int window_size_y, unsigned int cell_size, ParticleMatrix &particle_matrix, Brush &brush)
 	: m_window(sf::VideoMode({ window_size_x, window_size_y }), std::string("Sand Painter")),
-    m_particle_matrix(particle_matrix), m_brush(brush),
+    m_particle_matrix(particle_matrix), 
+    m_brush(brush),
 	m_gridLines(sf::PrimitiveType::Lines),
 	m_isDrawGridLines(true),
 	m_is_left_mouse_button_down(false),
@@ -16,18 +12,15 @@ GameWindow::GameWindow(unsigned int window_size_x, unsigned int window_size_y, u
     m_last_left_click_pos({ -1, -1 }),
     m_last_right_click_pos({ -1, -1 })
 {
-	// Set frame rate limit
 	m_window.setFramerateLimit(60);
 
     // Set up grid lines
-	// Y axis lines
-    for (int x = 0; x <= window_size_x; x += scale_factor)
+    for (int x = 0; x <= window_size_x; x += cell_size)
     {
         m_gridLines.append(sf::Vertex(sf::Vector2f(x, 0), sf::Color::Black));
         m_gridLines.append(sf::Vertex(sf::Vector2f(x, window_size_y), sf::Color::Black));
     }
-	// X axis lines
-    for (int y = 0; y <= window_size_y; y += scale_factor)
+    for (int y = 0; y <= window_size_y; y += cell_size)
     {
         m_gridLines.append(sf::Vertex(sf::Vector2f(0, y), sf::Color::Black));
         m_gridLines.append(sf::Vertex(sf::Vector2f(window_size_x, y), sf::Color::Black));
@@ -45,16 +38,13 @@ void GameWindow::run()
     }
 }
 
-// Render to window
 void GameWindow::render()
 {
     m_window.clear();
     m_window.draw(m_particle_matrix.m_particles_vertices);
 
     if (m_isDrawGridLines) 
-    {
         m_window.draw(m_gridLines);
-    }
 
     m_window.draw(m_brush.m_circle);
     m_window.display();
@@ -65,20 +55,16 @@ void GameWindow::processEvents()
     if (m_is_left_mouse_button_down)
     {
         drawMouseMovement(m_last_left_click_pos, m_mouse_pos, Particle(sf::Color::Red));
-        std::cout << "Left mouse HELD: " << vec2ToString(m_mouse_pos) << std::endl;
         m_last_left_click_pos = m_mouse_pos;
     }
     if (m_is_right_mouse_button_down)
     {
         drawMouseMovement(m_last_right_click_pos, m_mouse_pos, Particle());
-        std::cout << "Right mouse HELD: " << vec2ToString(m_mouse_pos) << std::endl;
         m_last_right_click_pos = m_mouse_pos;
     }
 
-    // Window events
     while (const std::optional<sf::Event> event = m_window.pollEvent())
     {
-         // Mouse movement tracking
         if (event->is<sf::Event::MouseMoved>())
         {
             const auto* move = event->getIf<sf::Event::MouseMoved>();
@@ -87,7 +73,6 @@ void GameWindow::processEvents()
             m_brush.moveBrush(m_mouse_pos);
         }
 
-		// Left mouse button pressed
         if (event->is<sf::Event::MouseButtonPressed>())
         {
             const auto* mb = event->getIf<sf::Event::MouseButtonPressed>();
@@ -95,11 +80,9 @@ void GameWindow::processEvents()
             if (mb->button == sf::Mouse::Button::Left)
             {
                 m_is_left_mouse_button_down = true;
-
-                m_brush.brushParticles(m_particle_matrix, Particle(sf::Color::Red));
                 m_last_left_click_pos = m_mouse_pos;
 
-                std::cout << "Left mouse pressed at: " << vec2ToString(m_mouse_pos) << std::endl;
+				m_brush.brushParticles(m_particle_matrix, Particle(sf::Color::Red)); // Coloured Particle
             }
 
             if (mb->button == sf::Mouse::Button::Right)
@@ -107,25 +90,19 @@ void GameWindow::processEvents()
                 m_is_right_mouse_button_down = true;
                 m_last_right_click_pos = m_mouse_pos;
 
-                m_brush.brushParticles( m_particle_matrix, Particle());
-                std::cout << "Right mouse pressed at: " << vec2ToString(m_mouse_pos) << std::endl;
+                m_brush.brushParticles(m_particle_matrix, Particle()); // Empty Particle
             }
         }
 
-		// Mouse button released
         if (event->is<sf::Event::MouseButtonReleased>())
         {
             const auto* mb = event->getIf<sf::Event::MouseButtonReleased>();
 
             if (mb->button == sf::Mouse::Button::Left)
-            {
                 m_is_left_mouse_button_down = false;
-            }
 
             if (mb->button == sf::Mouse::Button::Right)
-            {
                 m_is_right_mouse_button_down = false;
-            }
         }
 
 		// Keyboard events
@@ -173,6 +150,7 @@ void GameWindow:: drawMouseMovement(sf::Vector2i start, sf::Vector2i end, Partic
             break;
 
         int e2 = 2 * err;
+
         if (e2 > -dy)
         {
             err -= dy;

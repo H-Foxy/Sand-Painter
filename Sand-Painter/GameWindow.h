@@ -8,17 +8,13 @@
 class GameWindow 
 {
 public:
-	// Attributes
     sf::RenderWindow m_window;
 
-    // Constructor / Destructor
-    GameWindow(unsigned int window_size_x, unsigned int window_size_y, unsigned int scale_factor, ParticleMatrix &particle_matrix, Brush &brush);
+    GameWindow(unsigned int window_size_x, unsigned int window_size_y, unsigned int cell_size, ParticleMatrix &particle_matrix, Brush &brush);
 
-	// Main loop
     void run();
 
 private:
-    // Attributes
     sf::VertexArray m_gridLines;
 	bool m_isDrawGridLines;
 	ParticleMatrix &m_particle_matrix;
@@ -29,7 +25,6 @@ private:
 	sf::Vector2i m_last_right_click_pos;
     sf::Vector2i m_mouse_pos;
 
-    // Functions
     void render();
     void processEvents();
 	void processPhysics();

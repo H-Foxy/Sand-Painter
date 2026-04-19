@@ -1,7 +1,7 @@
 #include "Brush.h"
 
-Brush::Brush(int radius, int scale_factor , sf::Vector2i centre)
-	: m_radius(radius), m_radius_scaled(radius / scale_factor), m_centre(centre), m_centre_scaled(centre / scale_factor), m_scale_factor(scale_factor), m_circle(radius) 
+Brush::Brush(int radius, int cell_size , sf::Vector2i centre)
+	: m_radius(radius), m_radius_scaled(radius / cell_size), m_centre(centre), m_centre_scaled(centre / cell_size), m_cell_size(cell_size), m_circle(radius) 
 {
 	m_circle.setFillColor(sf::Color::Transparent);
 	m_circle.setOutlineThickness(1.f);
@@ -12,7 +12,7 @@ Brush::Brush(int radius, int scale_factor , sf::Vector2i centre)
 void Brush::moveBrush(sf::Vector2i new_centre)
 {
 	m_centre = new_centre;
-	m_centre_scaled = new_centre / m_scale_factor;
+	m_centre_scaled = new_centre / m_cell_size;
 	m_circle.setPosition({ static_cast<float>(new_centre.x - m_radius), static_cast<float>(new_centre.y - m_radius) });
 	calculateOccupiedCoordinates();
 }

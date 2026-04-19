@@ -7,21 +7,17 @@
 class ParticleMatrix 
 {
 public:
-	// Attributes
 	unsigned int m_rows;
 	unsigned int m_columns;
-	unsigned int m_scale_factor;
+	unsigned int m_cell_size;
 	sf::VertexArray m_particles_vertices;
 	std::vector<std::vector<Particle>> m_matrix;
 
-	// Constructor / Destructor
-	ParticleMatrix(unsigned int size_x, unsigned int size_y, unsigned int scale_factor);
-	~ParticleMatrix();
+	ParticleMatrix(unsigned int size_x, unsigned int size_y, unsigned int cell_size);
 
 	void setCellParticle(int x, int y, Particle particle);
 	void processPhysics();
 
 private:
-	// Functions
 	void setCellVertexColours(int x, int y, sf::Color colour);
 };
