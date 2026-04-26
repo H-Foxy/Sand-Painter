@@ -14,6 +14,7 @@ public:
 	sf::CircleShape m_circle;
 	std::vector<sf::Vector2i> m_occupied_coordinates;
 
+	Brush(int cell_size);
 	Brush(int radius, int cell_size, sf::Vector2i centre);
 
 	void moveBrush(sf::Vector2i new_centre);

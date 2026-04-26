@@ -1,7 +1,10 @@
 #include "ParticleMatrix.h"
 
 ParticleMatrix::ParticleMatrix(unsigned int size_x, unsigned int size_y, unsigned int cell_size)
-	: m_columns(size_x / cell_size), m_rows(size_y / cell_size), m_cell_size(cell_size), m_particles_vertices(sf::PrimitiveType::Triangles)
+	: m_columns(size_x / cell_size),
+    m_rows(size_y / cell_size), 
+    m_cell_size(cell_size),
+    m_particles_vertices(sf::PrimitiveType::Triangles)
 {
 	// Initialise matrix with empty Particles (White)
 	m_matrix.resize(m_columns, std::vector<Particle>(m_rows, Particle()));

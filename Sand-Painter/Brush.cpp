@@ -1,7 +1,15 @@
 #include "Brush.h"
 
-Brush::Brush(int radius, int cell_size , sf::Vector2i centre)
-	: m_radius(radius), m_radius_scaled(radius / cell_size), m_centre(centre), m_centre_scaled(centre / cell_size), m_cell_size(cell_size), m_circle(radius) 
+Brush::Brush(int cell_size)
+	: Brush(50, cell_size, sf::Vector2i{ 100, 100 })
+{}
+
+Brush::Brush(int radius, int cell_size, sf::Vector2i centre)
+	: m_radius(radius), 
+	m_radius_scaled(radius / cell_size), 
+	m_centre(centre), 
+	m_centre_scaled(centre / cell_size), 
+	m_cell_size(cell_size), m_circle(radius) 
 {
 	m_circle.setFillColor(sf::Color::Transparent);
 	m_circle.setOutlineThickness(1.f);
