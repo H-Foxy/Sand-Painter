@@ -15,7 +15,7 @@ public:
 
 	ParticleMatrix(unsigned int size_x, unsigned int size_y, unsigned int cell_size);
 
-	void setCellParticle(int x, int y, Particle particle);
+	void setCellParticle(unsigned int x, unsigned int y, Particle particle);
 	void processPhysics();
 
 private:

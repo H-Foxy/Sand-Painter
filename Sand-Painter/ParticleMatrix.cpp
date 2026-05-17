@@ -17,8 +17,8 @@ ParticleMatrix::ParticleMatrix(unsigned int size_x, unsigned int size_y, unsigne
             sf::Color color = m_matrix[x][y].m_colour;
 
 			// Calculate scaled pixel positions
-            float px = x * m_cell_size;
-            float py = y * m_cell_size;
+            float px = x * static_cast<float>(m_cell_size);
+            float py = y * static_cast<float>(m_cell_size);
 
             // Calculate positions of the 4 cell corners
             sf::Vector2f top_left(px, py);
@@ -49,7 +49,7 @@ void ParticleMatrix::setCellVertexColours(int pos_x, int pos_y, sf::Color colour
     }
 }
 
-void ParticleMatrix::setCellParticle(int pos_x, int pos_y, Particle particle)
+void ParticleMatrix::setCellParticle(unsigned int pos_x, unsigned int pos_y, Particle particle)
 {
     // Bounds checking
     if (pos_x < 0 || pos_x >= m_columns || pos_y < 0 || pos_y >= m_rows)
@@ -80,12 +80,12 @@ void ParticleMatrix::processPhysics()
                 particle.m_velocity.y += 0.33f;
 
             int fall_distance = static_cast<int>(std::round(particle.m_velocity.y));
-            int new_y = y;
-			int new_x = x;
+            unsigned int new_y = y;
+			unsigned int new_x = x;
 
             for (int i = 1; i <= fall_distance; i++) 
             {
-                int target_y = y + i;
+                unsigned int target_y = y + i;
 
 				// Collided with bottom row
                 if (target_y > m_rows -1)
@@ -106,7 +106,7 @@ void ParticleMatrix::processPhysics()
 						can_move_left = true;
 						dx -= 1;
                     }
-                    if ((new_x  < m_columns - 1) && m_matrix[new_x + 1][target_y].m_is_empty && m_matrix[new_x + 1][y].m_is_empty)
+                    if ((new_x < m_columns - 1) && m_matrix[new_x + 1][target_y].m_is_empty && m_matrix[new_x + 1][y].m_is_empty)
                     {
                         can_move_right = true;
                         dx += 1;
@@ -120,7 +120,7 @@ void ParticleMatrix::processPhysics()
                     {
                         new_x += dx;
                         if (particle.m_velocity.y > 1.f)
-                            particle.m_velocity.y -= 0.4;
+                            particle.m_velocity.y -= 0.4f;
                     }
                     else 
                     {
