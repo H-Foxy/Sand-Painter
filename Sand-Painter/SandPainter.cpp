@@ -1,4 +1,4 @@
-#include "GameWindow.h"
+#include "MainWindow.h"
 
 int main()
 {
@@ -7,7 +7,7 @@ int main()
 	const unsigned int window_size_y = 1080;
 	const unsigned int cell_size = 5;
 
-	GameWindow game(window_size_x, window_size_y, cell_size);
+	MainWindow game(window_size_x, window_size_y, cell_size);
 
 	// Game Loop
 	game.run();

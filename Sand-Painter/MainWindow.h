@@ -5,12 +5,12 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
-class GameWindow 
+class MainWindow 
 {
 public:
     sf::RenderWindow m_window;
 
-    GameWindow(unsigned int window_size_x, unsigned int window_size_y, unsigned int cell_size);
+    MainWindow(unsigned int window_size_x, unsigned int window_size_y, unsigned int cell_size);
 
     void run();
 

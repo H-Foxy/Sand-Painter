@@ -80,22 +80,19 @@
   <ItemGroup>
     <ClCompile Include="Brush.cpp" />
     <ClCompile Include="ParticleMatrix.cpp" />
-    <ClCompile Include="GameWindow.cpp" />
+    <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="SandPainter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Brush.h" />
     <ClInclude Include="ParticleMatrix.h" />
-    <ClInclude Include="GameWindow.h" />
+    <ClInclude Include="MainWindow.h" />
     <ClInclude Include="Includes.h" />
     <ClInclude Include="Particle.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <Target Name="CopySFMLDlls" AfterTargets="Build">
-    <Copy 
-      SourceFiles="@(SFMLDll)" 
-      DestinationFolder="$(OutDir)" 
-      SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(SFMLDll)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
   </Target>
 </Project>

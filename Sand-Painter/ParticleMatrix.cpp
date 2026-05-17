@@ -74,12 +74,11 @@ void ParticleMatrix::processPhysics()
         {
             Particle& particle = m_matrix[x][y];
 
-            if (!m_matrix[x][y].m_is_empty) 
-            {
-                particle.m_velocity.y += 0.33f;           // gravity
-                if (particle.m_velocity.y > 3.0f)
-                    particle.m_velocity.y = 3.0f;         // terminal velocity
-            }
+            if (particle.m_is_empty)
+				continue;
+
+			if (particle.m_velocity.y < 3.0f)
+                particle.m_velocity.y += 0.33f;
 
             int fall_distance = static_cast<int>(std::round(particle.m_velocity.y));
             int new_y = y;
@@ -98,30 +97,26 @@ void ParticleMatrix::processPhysics()
                 // Collision with non-empty particle
                 if (!m_matrix[x][target_y].m_is_empty)
                 {
-                    // Check left diagonal move is free
-                    bool can_move_left = (x > 0) &&
-                        m_matrix[x - 1][target_y].m_is_empty &&
-                        m_matrix[x - 1][y].m_is_empty;
-
-                    // Check right diagonal move is free
-                    bool can_move_right = (x < m_columns - 1) &&
-                        m_matrix[x + 1][target_y].m_is_empty &&
-                        m_matrix[x + 1][y].m_is_empty;
-
                     int dx = 0;
+					bool can_move_left = false;
+					bool can_move_right = false;
+
+                    if ((x > 0) && m_matrix[x - 1][target_y].m_is_empty && m_matrix[x - 1][y].m_is_empty) 
+                    {
+						can_move_left = true;
+						dx -= 1;
+                    }
+
+                    if ((x < m_columns - 1) && m_matrix[x + 1][target_y].m_is_empty && m_matrix[x + 1][y].m_is_empty)
+                    {
+                        can_move_right = true;
+                        dx += 1;
+                    }
 
 					// Randomly choose left or right if both free
                     if (can_move_left && can_move_right) 
                     {
                         dx = (rand() % 2 == 0) ? -1 : 1;
-                    }
-                    else if (can_move_left) 
-                    {
-                        dx = -1;
-                    }
-                    else if (can_move_right) 
-                    {
-                        dx = 1;
                     }
 
                     // Move particle

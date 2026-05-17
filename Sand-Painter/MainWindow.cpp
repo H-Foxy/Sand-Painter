@@ -1,9 +1,9 @@
-#include "GameWindow.h"
+#include "MainWindow.h"
 
-GameWindow::GameWindow(unsigned int window_size_x, unsigned int window_size_y, unsigned int cell_size)
+MainWindow::MainWindow(unsigned int window_size_x, unsigned int window_size_y, unsigned int cell_size)
 	: m_window_size({ window_size_x, window_size_y }),
     m_window(sf::VideoMode({ window_size_x, window_size_y }), std::string("Sand Painter")),
-    m_world_view(sf::FloatRect({ 0.f, 0.f }, { static_cast<float>(window_size_x), static_cast<float>(window_size_y) })),
+    m_world_view(sf::FloatRect({ 0.f, 0.f }, { static_cast<float>(window_size_x),static_cast<float>(window_size_y) })),
 	m_gridLines(sf::PrimitiveType::Lines),
 	m_isDrawGridLines(true),
 	m_particle_matrix(window_size_x, window_size_y, cell_size),
@@ -22,18 +22,18 @@ GameWindow::GameWindow(unsigned int window_size_x, unsigned int window_size_y, u
     // Set up grid lines
     for (int x = 0; x <= window_size_x; x += cell_size)
     {
-        m_gridLines.append(sf::Vertex(sf::Vector2f(x, 0), grid_line_color));
-        m_gridLines.append(sf::Vertex(sf::Vector2f(x, window_size_y), grid_line_color));
+        m_gridLines.append(sf::Vertex(sf::Vector2f( x, 0 ), grid_line_color));
+        m_gridLines.append(sf::Vertex(sf::Vector2f( x, window_size_y), grid_line_color));
     }
     for (int y = 0; y <= window_size_y; y += cell_size)
     {
-        m_gridLines.append(sf::Vertex(sf::Vector2f(0, y), grid_line_color));
-        m_gridLines.append(sf::Vertex(sf::Vector2f(window_size_x, y), grid_line_color));
+        m_gridLines.append(sf::Vertex(sf::Vector2f( 0, y ), grid_line_color));
+        m_gridLines.append(sf::Vertex(sf::Vector2f(window_size_x, y ), grid_line_color));
 	}
 }
 
 // Main loop
-void GameWindow::run() 
+void MainWindow::run() 
 {
     while (m_window.isOpen()) 
     {
@@ -43,7 +43,7 @@ void GameWindow::run()
     }
 }
 
-void GameWindow::render()
+void MainWindow::render()
 {
     m_window.clear();
     m_window.draw(m_particle_matrix.m_particles_vertices);
@@ -55,7 +55,7 @@ void GameWindow::render()
     m_window.display();
 }
 
-void GameWindow::processEvents() 
+void MainWindow::processEvents() 
 {
     if (m_is_left_mouse_button_down)
     {
@@ -132,7 +132,7 @@ void GameWindow::processEvents()
     }
 }
 
-void GameWindow::updateMousePosition(sf::Vector2i pixel_position)
+void MainWindow::updateMousePosition(sf::Vector2i pixel_position)
 {
     const sf::Vector2f world_position = m_window.mapPixelToCoords(pixel_position);
 
@@ -145,7 +145,7 @@ void GameWindow::updateMousePosition(sf::Vector2i pixel_position)
     m_brush.moveBrush(m_mouse_pos);
 }
 
-void GameWindow::updateView(sf::Vector2u window_size)
+void MainWindow::updateView(sf::Vector2u window_size)
 {
     const float window_aspect_ratio = static_cast<float>(window_size.x) / static_cast<float>(window_size.y);
     const sf::Vector2f view_size = m_world_view.getSize();
@@ -177,7 +177,7 @@ void GameWindow::updateView(sf::Vector2u window_size)
 }
 
 // Bresenham's line algorithm for drawing straight lines between two mouse points
-void GameWindow:: drawMouseMovement(sf::Vector2i start, sf::Vector2i end, Particle particle)
+void MainWindow:: drawMouseMovement(sf::Vector2i start, sf::Vector2i end, Particle particle)
 {
     int x0 = start.x;
     int y0 = start.y;
