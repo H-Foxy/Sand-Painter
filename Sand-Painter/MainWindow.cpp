@@ -3,7 +3,7 @@
 MainWindow::MainWindow(unsigned int window_size_x, unsigned int window_size_y, unsigned int cell_size)
 	: m_window_size({ window_size_x, window_size_y }),
     m_window(sf::VideoMode({ window_size_x, window_size_y }), std::string("Sand Painter")),
-    m_world_view(sf::FloatRect({ 0.f, 0.f }, { static_cast<float>(window_size_x),static_cast<float>(window_size_y) })),
+    m_world_view(sf::FloatRect({ 0.f, 0.f }, { static_cast<float>(window_size_x), static_cast<float>(window_size_y) })),
 	m_gridLines(sf::PrimitiveType::Lines),
 	m_isDrawGridLines(true),
 	m_particle_matrix(window_size_x, window_size_y, cell_size),
@@ -20,15 +20,15 @@ MainWindow::MainWindow(unsigned int window_size_x, unsigned int window_size_y, u
     const sf::Color grid_line_color(0, 0, 0, 64);
 
     // Set up grid lines
-    for (int x = 0; x <= window_size_x; x += cell_size)
+    for (unsigned int x = 0; x <= window_size_x; x += cell_size)
     {
-        m_gridLines.append(sf::Vertex(sf::Vector2f( x, 0 ), grid_line_color));
-        m_gridLines.append(sf::Vertex(sf::Vector2f( x, window_size_y), grid_line_color));
+        m_gridLines.append(sf::Vertex(sf::Vector2f(static_cast<float>(x), 0.f), grid_line_color));
+        m_gridLines.append(sf::Vertex(sf::Vector2f(static_cast<float>(x), static_cast<float>(window_size_y)), grid_line_color));
     }
-    for (int y = 0; y <= window_size_y; y += cell_size)
+    for (unsigned int y = 0; y <= window_size_y; y += cell_size)
     {
-        m_gridLines.append(sf::Vertex(sf::Vector2f( 0, y ), grid_line_color));
-        m_gridLines.append(sf::Vertex(sf::Vector2f(window_size_x, y ), grid_line_color));
+        m_gridLines.append(sf::Vertex(sf::Vector2f(0.f, static_cast<float>(y)), grid_line_color));
+        m_gridLines.append(sf::Vertex(sf::Vector2f(static_cast<float>(window_size_x), static_cast<float>(y)), grid_line_color));
 	}
 }
 

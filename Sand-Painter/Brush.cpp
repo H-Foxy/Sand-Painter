@@ -37,11 +37,11 @@ void Brush::calculateOccupiedCoordinates()
 {
 	std::vector<sf::Vector2i> pixels;
 	int r2 = m_radius_scaled * m_radius_scaled;
-	for (int y = -m_radius_scaled; y <= m_radius_scaled; ++y)
+	for (int y = -m_radius_scaled; y <= m_radius_scaled; y++)
 	{
 		int yy = y * y;
 		int xMax = static_cast<int>(std::sqrt(r2 - yy));
-		for (int x = -xMax; x <= xMax; ++x)
+		for (int x = -xMax; x <= xMax; x++)
 		{
 			pixels.push_back(sf::Vector2i(m_centre_scaled.x + x, m_centre_scaled.y + y));
 		}

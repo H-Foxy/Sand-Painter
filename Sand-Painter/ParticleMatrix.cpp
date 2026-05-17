@@ -10,9 +10,9 @@ ParticleMatrix::ParticleMatrix(unsigned int size_x, unsigned int size_y, unsigne
 	m_matrix.resize(m_columns, std::vector<Particle>(m_rows, Particle()));
 
     // Convert coordinates to triangle Vertices for rendering
-    for (unsigned int x = 0; x < m_columns; ++x)
+    for (unsigned int x = 0; x < m_columns; x++)
     {
-        for (unsigned int y = 0; y < m_rows; ++y)
+        for (unsigned int y = 0; y < m_rows; y++)
         {
             sf::Color color = m_matrix[x][y].m_colour;
 
@@ -41,12 +41,11 @@ ParticleMatrix::ParticleMatrix(unsigned int size_x, unsigned int size_y, unsigne
 
 void ParticleMatrix::setCellVertexColours(int pos_x, int pos_y, sf::Color colour)
 {
-	// Calculate the starting index for the cell's vertices in the vertex array
-    int i = (pos_y + (pos_x * m_rows)) * 6;
+    int index_offset = (pos_y + (pos_x * m_rows)) * 6;
 
-    for (int v = 0; v < 6; ++v) 
+    for (int i = 0; i < 6; i++) 
     {
-        m_particles_vertices[v + i].color = colour;
+        m_particles_vertices[i + index_offset].color = colour;
     }
 }
 
@@ -67,10 +66,10 @@ void ParticleMatrix::setCellParticle(int pos_x, int pos_y, Particle particle)
 void ParticleMatrix::processPhysics()
 {
     // Loop matrix - bottom to top
-    for (int y = m_rows - 1; y >= 0; --y)
+    for (int y = m_rows - 2; y >= 0; y--)
     {
         // Left to right
-        for (unsigned int x = 0; x < m_columns; ++x)
+        for (unsigned int x = 0; x < m_columns; x++)
         {
             Particle& particle = m_matrix[x][y];
 
@@ -82,64 +81,60 @@ void ParticleMatrix::processPhysics()
 
             int fall_distance = static_cast<int>(std::round(particle.m_velocity.y));
             int new_y = y;
+			int new_x = x;
 
-            // Fall until hitting a non empty particle or matrix bottom row
-            for (int i = 1; i <= fall_distance; ++i) 
+            for (int i = 1; i <= fall_distance; i++) 
             {
                 int target_y = y + i;
 
-                if (target_y >= m_rows)
+				// Collided with bottom row
+                if (target_y > m_rows -1)
                 {
-                    particle.m_velocity.y = 0.0f; // reset velocity
+                    particle.m_velocity.y = 0.0f;
                     break;
                 }
 
-                // Collision with non-empty particle
-                if (!m_matrix[x][target_y].m_is_empty)
+                // Collided with non-empty particle
+                if (!m_matrix[new_x][target_y].m_is_empty)
                 {
                     int dx = 0;
 					bool can_move_left = false;
 					bool can_move_right = false;
 
-                    if ((x > 0) && m_matrix[x - 1][target_y].m_is_empty && m_matrix[x - 1][y].m_is_empty) 
+                    if ((new_x > 0) && m_matrix[new_x - 1][target_y].m_is_empty && m_matrix[new_x - 1][y].m_is_empty)
                     {
 						can_move_left = true;
 						dx -= 1;
                     }
-
-                    if ((x < m_columns - 1) && m_matrix[x + 1][target_y].m_is_empty && m_matrix[x + 1][y].m_is_empty)
+                    if ((new_x  < m_columns - 1) && m_matrix[new_x + 1][target_y].m_is_empty && m_matrix[new_x + 1][y].m_is_empty)
                     {
                         can_move_right = true;
                         dx += 1;
                     }
-
-					// Randomly choose left or right if both free
                     if (can_move_left && can_move_right) 
                     {
                         dx = (rand() % 2 == 0) ? -1 : 1;
                     }
 
-                    // Move particle
                     if (dx != 0) 
                     {
-                        setCellParticle(x + dx, target_y, particle);
-                        setCellParticle(x, y, Particle());
+                        new_x += dx;
+                        if (particle.m_velocity.y > 1.f)
+                            particle.m_velocity.y -= 0.4;
                     }
                     else 
                     {
                         particle.m_velocity.y = 0.0f;
+                        break;
                     }
                 }
-                else 
-                {
-                    new_y = target_y;
-                }
+                
+                new_y = target_y;
             }
 
-            // Update particle position
             if (new_y != y) 
             {
-                setCellParticle(x, new_y, particle);
+                setCellParticle(new_x, new_y, particle);
                 setCellParticle(x, y, Particle());
             }
         }
